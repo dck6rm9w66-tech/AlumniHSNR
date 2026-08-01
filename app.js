@@ -135,6 +135,25 @@
       }).addTo(map);
       pinLayer = L.layerGroup().addTo(map);
       map.on("click", function (e) { onMapClick(e.latlng); });
+
+      /* iOS/Safari: Leaflet misst den Container manchmal zu früh.
+         Nach Layout, Fensterwechsel und Drehung neu vermessen. */
+      function remeasure() { if (map) map.invalidateSize(false); }
+      setTimeout(remeasure, 200);
+      setTimeout(remeasure, 800);
+      window.addEventListener("load", remeasure);
+      window.addEventListener("resize", remeasure);
+      window.addEventListener("orientationchange", function () { setTimeout(remeasure, 300); });
+      if ("ResizeObserver" in window) {
+        try { new ResizeObserver(remeasure).observe(document.getElementById("map")); } catch (e) {}
+      }
+      /* Erst vermessen, wenn die Kartensektion sichtbar wird */
+      if ("IntersectionObserver" in window) {
+        var mo = new IntersectionObserver(function (ents) {
+          ents.forEach(function (en) { if (en.isIntersecting) { remeasure(); } });
+        }, { threshold: 0.01 });
+        mo.observe(document.getElementById("map"));
+      }
     } catch (err) { haveMap = false; }
   }
   if (!haveMap) { var f = document.getElementById("map-fail"); if (f) f.hidden = false; }

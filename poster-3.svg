@@ -10,6 +10,6 @@
     <circle r="120"/><circle r="55"/>
     <line x1="0" y1="-170" x2="0" y2="170"/><line x1="-170" y1="0" x2="170" y2="0"/>
   </g>
-  <text x="300" y="640" font-family="'Syne',sans-serif" font-weight="800" font-size="72" letter-spacing="2" text-anchor="middle" fill="#16130F">RASTER</text>
-  <text x="300" y="686" font-family="'Space Mono',monospace" font-size="15" letter-spacing="5" text-anchor="middle" fill="#16130F" opacity="0.65">ORDNUNG &amp; ZUFALL</text>
+  <text x="300" y="640" font-family="Impact, 'Haettenschweiler', 'Arial Narrow Bold', 'Helvetica Neue', Arial, sans-serif" font-weight="800" font-size="72" letter-spacing="2" text-anchor="middle" fill="#16130F">RASTER</text>
+  <text x="300" y="686" font-family="'SF Mono', Menlo, Monaco, Consolas, 'Courier New', monospace" font-size="15" letter-spacing="5" text-anchor="middle" fill="#16130F" opacity="0.65">ORDNUNG &amp; ZUFALL</text>
 </svg>
