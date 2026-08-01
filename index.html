@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KD·2016 — 10 Jahre Wiedersehen · Kommunikationsdesign Krefeld</title>
+<meta name="description" content="Zehn Jahre nach dem Abschluss: Das große Wiedersehen des Jahrgangs 2016 Kommunikationsdesign an der Hochschule Niederrhein, Krefeld. Trag ein, wo du heute lebst — und wir finden unseren gemeinsamen Mittelpunkt.">
+
+<link rel="icon" href="assets/mark.svg" type="image/svg+xml">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+
+<!-- Leaflet map -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- Print-sheet frame: registration marks in the four corners -->
+<div class="sheet-frame" aria-hidden="true">
+  <span class="reg reg--tl"></span>
+  <span class="reg reg--tr"></span>
+  <span class="reg reg--bl"></span>
+  <span class="reg reg--br"></span>
+  <span class="cmyk-bar"><i class="c-c"></i><i class="c-m"></i><i class="c-y"></i><i class="c-k"></i></span>
+</div>
+
+<!-- NAV -->
+<header class="nav" id="top">
+  <a class="nav__logo" href="#top" aria-label="KD 2016 Startseite">
+    <img src="assets/logo.svg" alt="KD 2016 — Hochschule Niederrhein" width="180" height="36">
+  </a>
+  <nav class="nav__links" aria-label="Hauptnavigation">
+    <a href="#karte">Mittelpunkt</a>
+    <a href="#programm">Programm</a>
+    <a href="#ort">Ort</a>
+    <a href="#gaestebuch">Gästebuch</a>
+    <a href="#rsvp" class="nav__cta">Zusagen</a>
+  </nav>
+</header>
+
+<!-- HERO -->
+<main>
+<section class="hero" id="hero">
+  <p class="hero__eyebrow"><span class="tick"></span>Jahrgang 2016 · Kommunikationsdesign · Krefeld</p>
+  <h1 class="hero__title" data-reveal>
+    <span class="hero__line">Zehn</span>
+    <span class="hero__line hero__line--stroke">Jahre</span>
+    <span class="hero__line">später</span>
+  </h1>
+  <p class="hero__lede" data-reveal>
+    Wir waren ein Jahrgang, ein Rasterfeld, ein Kurs. Heute sind wir über Städte,
+    Länder und Zeitzonen verteilt. Am <strong>12. September 2026</strong> bringen wir
+    uns noch einmal <em>in Register</em> — irgendwo in Nordrhein-Westfalen.
+  </p>
+
+  <!-- Countdown -->
+  <div class="countdown" id="countdown" aria-label="Countdown bis zum Treffen">
+    <div class="cd__unit"><span class="cd__num" data-cd="days">–</span><span class="cd__lbl">Tage</span></div>
+    <div class="cd__unit"><span class="cd__num" data-cd="hours">–</span><span class="cd__lbl">Std</span></div>
+    <div class="cd__unit"><span class="cd__num" data-cd="mins">–</span><span class="cd__lbl">Min</span></div>
+    <div class="cd__unit"><span class="cd__num" data-cd="secs">–</span><span class="cd__lbl">Sek</span></div>
+  </div>
+
+  <div class="hero__actions">
+    <a href="#karte" class="btn btn--solid">Wo lebst du heute?</a>
+    <a href="#programm" class="btn btn--ghost">Zum Programm</a>
+  </div>
+
+  <!-- fact strip -->
+  <dl class="facts" data-reveal>
+    <div><dt>Datum</dt><dd>Sa · 12.09.2026</dd></div>
+    <div><dt>Beginn</dt><dd>18:00 Uhr</dd></div>
+    <div><dt>Ort</dt><dd>Düsseldorf, NRW</dd></div>
+    <div><dt>Dresscode</dt><dd>Kreativ leger</dd></div>
+  </dl>
+</section>
+
+<!-- ================= MAP / CENTROID ================= -->
+<section class="map-section" id="karte">
+  <div class="map-section__head">
+    <p class="eyebrow eyebrow--light">01 — Der gemeinsame Schwerpunkt</p>
+    <h2 class="section-title">Setz deine Passermarke.</h2>
+    <p class="section-lede section-lede--light">
+      Trag ein, wo du heute wohnst. Aus allen Punkten berechnen wir live den geografischen
+      Mittelpunkt des Jahrgangs — die große Passermarke auf der Karte. Keine Anmeldung nötig.
+    </p>
+  </div>
+
+  <div class="map-wrap">
+    <!-- Controls -->
+    <div class="map-panel">
+      <form class="pin-form" id="pin-form" autocomplete="off">
+        <label class="field">
+          <span class="field__lbl">Deine Stadt</span>
+          <input type="text" id="city-input" placeholder="z. B. Lissabon, Berlin, Melbourne …" required>
+        </label>
+        <label class="field">
+          <span class="field__lbl">Dein Name <em>(optional)</em></span>
+          <input type="text" id="name-input" placeholder="Wie standst du im Kurs?" maxlength="40">
+        </label>
+        <button type="submit" class="btn btn--solid btn--block" id="pin-submit">Auf der Karte eintragen</button>
+        <p class="pin-hint" id="pin-hint">Tipp: Du kannst auch direkt in die Karte tippen.</p>
+      </form>
+
+      <div class="stats" id="stats">
+        <div class="stat">
+          <span class="stat__num" data-stat="count">0</span>
+          <span class="stat__lbl">eingetragen</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-stat="place">—</span>
+          <span class="stat__lbl">Schwerpunkt liegt bei</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-stat="coords">—</span>
+          <span class="stat__lbl">Koordinaten (Ø)</span>
+        </div>
+        <div class="stat">
+          <span class="stat__num" data-stat="spread">—</span>
+          <span class="stat__lbl">Ø Distanz zum Mittelpunkt</span>
+        </div>
+        <div class="stat stat--wide">
+          <span class="stat__num stat__num--sm" data-stat="far">—</span>
+          <span class="stat__lbl">weitester Weg</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- The map -->
+    <div class="map-holder">
+      <div id="map" role="application" aria-label="Weltkarte mit den Wohnorten der Alumni"></div>
+      <div class="map-fail" id="map-fail" hidden>
+        <p>Die Karte konnte nicht geladen werden (offline oder Netzwerk blockiert).<br>
+           Beim Betrieb auf einem Webserver erscheint sie normal.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mode-badge" id="mode-badge" hidden></div>
+</section>
+
+<!-- ================= PROGRAMM ================= -->
+<section class="section section--paper" id="programm">
+  <p class="eyebrow">02 — Ablauf des Abends</p>
+  <h2 class="section-title">Programm.</h2>
+  <ol class="agenda">
+    <li class="agenda__item" data-reveal>
+      <span class="agenda__time">18:00</span>
+      <div class="agenda__body"><h3>Ankommen &amp; Aperitif</h3><p>Namensschilder in Kursschrift, Sekt und die erste „Weißt du noch…"-Runde.</p></div>
+    </li>
+    <li class="agenda__item" data-reveal>
+      <span class="agenda__time">19:00</span>
+      <div class="agenda__body"><h3>Enthüllung der Karte</h3><p>Wir zeigen den finalen Schwerpunkt des Jahrgangs — live auf der großen Leinwand.</p></div>
+    </li>
+    <li class="agenda__item" data-reveal>
+      <span class="agenda__time">19:30</span>
+      <div class="agenda__body"><h3>Abendessen &amp; Kurzvorträge</h3><p>Fünf Minuten, fünf Slides: Was ist aus uns geworden? Freiwillig, ehrlich, gern selbstironisch.</p></div>
+    </li>
+    <li class="agenda__item" data-reveal>
+      <span class="agenda__time">21:30</span>
+      <div class="agenda__body"><h3>Riso-Werkstatt &amp; Archiv</h3><p>Alte Semesterarbeiten, Mappen und Fehldrucke zum Blättern. Bringt mit, was ihr habt.</p></div>
+    </li>
+    <li class="agenda__item" data-reveal>
+      <span class="agenda__time">22:30</span>
+      <div class="agenda__body"><h3>Musik bis offen</h3><p>Die Playlist von 2016 läuft. Ihr wisst, welche Songs gemeint sind.</p></div>
+    </li>
+  </ol>
+</section>
+
+<!-- ================= ORT / ANREISE ================= -->
+<section class="section section--split" id="ort">
+  <div class="split__text">
+    <p class="eyebrow">03 — Ort &amp; Anreise</p>
+    <h2 class="section-title">Areal Böhler,<br>Düsseldorf.</h2>
+    <p class="section-lede">
+      Ein altes Stahlwerk als Eventfläche — roher Beton, viel Licht, genug Raum für
+      einen ganzen Jahrgang. Zentral in NRW und nur rund 20 Minuten von Krefeld,
+      wo alles begann.
+    </p>
+    <dl class="ort-facts">
+      <div><dt>Adresse</dt><dd>Hansaallee 321, 40549 Düsseldorf</dd></div>
+      <div><dt>Bahn</dt><dd>S-Bahn bis Düsseldorf-Heerdt, 8 Min. zu Fuß</dd></div>
+      <div><dt>Auto</dt><dd>Parkplätze auf dem Areal, A52 Ausfahrt Heerdt</dd></div>
+      <div><dt>Übernachten</dt><dd>Kontingent im Partnerhotel — Code <code>KD2016</code></dd></div>
+    </dl>
+    <p class="note">Ort und Datum sind der aktuelle Planungsstand des Orga-Teams und können sich noch ändern.</p>
+  </div>
+  <div class="split__aside">
+    <div class="ort-card">
+      <span class="reg reg--card" aria-hidden="true"></span>
+      <p class="ort-card__k">NRW</p>
+      <p class="ort-card__city">Düsseldorf</p>
+      <p class="ort-card__coord">51.2277° N · 6.7735° E</p>
+      <div class="ort-card__bars"><i></i><i></i><i></i><i></i><i></i></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= RSVP ================= -->
+<section class="section section--rsvp" id="rsvp">
+  <p class="eyebrow eyebrow--light">04 — Sag zu</p>
+  <h2 class="section-title">Bist du dabei?</h2>
+  <p class="section-lede section-lede--light">Eine schnelle Zusage hilft dem Orga-Team bei Catering und Platz. Ohne Konto, ohne Aufwand.</p>
+
+  <div class="rsvp-grid">
+    <form class="rsvp-form" id="rsvp-form" autocomplete="off">
+      <label class="field field--light">
+        <span class="field__lbl">Name</span>
+        <input type="text" id="rsvp-name" placeholder="Dein Name" required maxlength="40">
+      </label>
+      <div class="field-row">
+        <label class="field field--light">
+          <span class="field__lbl">Begleitung</span>
+          <select id="rsvp-guests">
+            <option value="0">nur ich</option>
+            <option value="1">+1</option>
+            <option value="2">+2</option>
+          </select>
+        </label>
+        <label class="field field--light">
+          <span class="field__lbl">Essen</span>
+          <select id="rsvp-diet">
+            <option value="omnivore">alles</option>
+            <option value="veggie">vegetarisch</option>
+            <option value="vegan">vegan</option>
+          </select>
+        </label>
+      </div>
+      <button type="submit" class="btn btn--solid btn--block">Ich komme</button>
+      <p class="pin-hint pin-hint--light" id="rsvp-hint"></p>
+    </form>
+
+    <div class="rsvp-counter">
+      <span class="rsvp-counter__num" id="rsvp-count">0</span>
+      <span class="rsvp-counter__lbl">Zusagen bisher</span>
+      <ul class="rsvp-list" id="rsvp-list" aria-live="polite"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ================= GÄSTEBUCH ================= -->
+<section class="section section--paper" id="gaestebuch">
+  <p class="eyebrow">05 — Gästebuch</p>
+  <h2 class="section-title">Ein Wort an den Jahrgang.</h2>
+  <div class="guest-grid">
+    <form class="guest-form" id="guest-form" autocomplete="off">
+      <label class="field">
+        <span class="field__lbl">Dein Name</span>
+        <input type="text" id="guest-name" placeholder="Name" required maxlength="40">
+      </label>
+      <label class="field">
+        <span class="field__lbl">Nachricht</span>
+        <textarea id="guest-msg" placeholder="Eine Erinnerung, ein Gruß, ein Insider…" required maxlength="240" rows="4"></textarea>
+      </label>
+      <button type="submit" class="btn btn--solid btn--block">Eintragen</button>
+    </form>
+    <ul class="guest-wall" id="guest-wall" aria-live="polite"></ul>
+  </div>
+</section>
+
+<!-- ================= ERINNERUNGEN ================= -->
+<section class="section section--gallery" id="erinnerungen">
+  <p class="eyebrow">06 — Erinnerungen</p>
+  <h2 class="section-title">Aus dem Archiv 2016.</h2>
+  <div class="gallery">
+    <figure class="gallery__item" data-reveal><img src="assets/poster-1.svg" alt="Semesterplakat: 2016" loading="lazy"></figure>
+    <figure class="gallery__item" data-reveal><img src="assets/poster-2.svg" alt="Farbauszug KD" loading="lazy"></figure>
+    <figure class="gallery__item" data-reveal><img src="assets/poster-3.svg" alt="Raster – Ordnung und Zufall" loading="lazy"></figure>
+    <figure class="gallery__item" data-reveal><img src="assets/poster-4.svg" alt="Wir sehen uns – plus zehn Jahre" loading="lazy"></figure>
+  </div>
+  <p class="gallery__cta">Hast du eigene Fotos oder Arbeiten von damals? Bring sie mit — wir digitalisieren sie vor Ort.</p>
+</section>
+
+<!-- ================= FAQ ================= -->
+<section class="section section--paper" id="faq">
+  <p class="eyebrow">07 — Fragen</p>
+  <h2 class="section-title">Kurz &amp; knapp.</h2>
+  <div class="faq">
+    <details class="faq__item"><summary>Muss ich mich anmelden oder ein Konto anlegen?</summary><p>Nein. Karte, Gästebuch und Zusage funktionieren ohne Login. Trag einfach ein, was du magst.</p></details>
+    <details class="faq__item"><summary>Kostet das Treffen etwas?</summary><p>Einen kleinen Unkostenbeitrag für Location und Catering sammeln wir vor Ort ein. Der genaue Betrag steht, sobald die Zusagen durch sind.</p></details>
+    <details class="faq__item"><summary>Kann ich jemanden mitbringen?</summary><p>Klar — bei der Zusage kannst du +1 oder +2 angeben. Ehemalige aus Nachbarjahrgängen sind ebenfalls herzlich willkommen.</p></details>
+    <details class="faq__item"><summary>Was passiert mit meinen Daten?</summary><p>Wir speichern nur, was du freiwillig einträgst (Stadt, optional Name, Nachricht). Nichts wird weiterverkauft. Auf Wunsch löscht das Orga-Team deinen Eintrag.</p></details>
+    <details class="faq__item"><summary>Ich schaffe es nicht — schade?</summary><p>Trag dich trotzdem auf der Karte ein! So bleibt der Jahrgang sichtbar, auch wenn nicht alle kommen können.</p></details>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer__mark"><img src="assets/mark.svg" alt="" width="40" height="40"></div>
+  <p class="footer__big">Wir sehen uns.<br>12.09.2026</p>
+  <div class="footer__meta">
+    <p>Kommunikationsdesign · Fachbereich Design<br>Hochschule Niederrhein, Krefeld</p>
+    <p>Ein inoffizielles Alumni-Projekt des Jahrgangs 2016.<br>Fragen ans Orga-Team: <a href="mailto:orga@kd2016.example">orga@kd2016.example</a></p>
+  </div>
+  <p class="footer__fine">Karten © OpenStreetMap-Mitwirkende, Kacheln © CARTO · Gestaltet in Register.</p>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Leaflet -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Firebase (compat) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<!-- Config + App -->
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

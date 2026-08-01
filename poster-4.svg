@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+  <defs>
+    <pattern id="ht4" width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <circle cx="5" cy="5" r="3" fill="#FF3D8B"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="800" fill="#1749FF"/>
+  <rect x="0" y="0" width="600" height="800" fill="url(#ht4)" opacity="0.35"/>
+  <text x="300" y="300" font-family="'Syne',sans-serif" font-weight="800" font-size="150" letter-spacing="-4" text-anchor="middle" fill="#EAE7DF">WIR</text>
+  <text x="300" y="450" font-family="'Syne',sans-serif" font-weight="800" font-size="150" letter-spacing="-4" text-anchor="middle" fill="#EAE7DF">SEHEN</text>
+  <text x="300" y="600" font-family="'Syne',sans-serif" font-weight="800" font-size="150" letter-spacing="-4" text-anchor="middle" fill="#16130F">UNS</text>
+  <text x="300" y="700" font-family="'Space Mono',monospace" font-size="18" letter-spacing="8" text-anchor="middle" fill="#EAE7DF">+10 JAHRE</text>
+</svg>

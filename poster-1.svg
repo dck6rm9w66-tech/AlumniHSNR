@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800">
+  <defs>
+    <pattern id="ht1" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(15)">
+      <circle cx="4.5" cy="4.5" r="2.4" fill="#1749FF"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="800" fill="#EAE7DF"/>
+  <rect x="40" y="40" width="520" height="720" fill="none" stroke="#16130F" stroke-width="2"/>
+  <text x="300" y="360" font-family="'Syne',sans-serif" font-weight="800" font-size="240" letter-spacing="-8" text-anchor="middle" fill="url(#ht1)">2016</text>
+  <text x="300" y="440" font-family="'Syne',sans-serif" font-weight="800" font-size="240" letter-spacing="-8" text-anchor="middle" fill="#FF3D8B" opacity="0.85" style="mix-blend-mode:multiply">2016</text>
+  <text x="60" y="720" font-family="'Space Mono',monospace" font-size="20" letter-spacing="4" fill="#16130F">DIPLOMA / SEMESTERAUSSTELLUNG</text>
+  <text x="60" y="748" font-family="'Space Mono',monospace" font-size="14" letter-spacing="3" fill="#16130F" opacity="0.6">KOMMUNIKATIONSDESIGN · KREFELD</text>
+</svg>
