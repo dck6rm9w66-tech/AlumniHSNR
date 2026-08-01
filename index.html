@@ -16,7 +16,7 @@
 <!-- Leaflet map -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
@@ -284,7 +284,7 @@
     <details class="faq__item"><summary>Muss ich mich anmelden oder ein Konto anlegen?</summary><p>Nein. Karte, Gästebuch und Zusage funktionieren ohne Login. Trag einfach ein, was du magst.</p></details>
     <details class="faq__item"><summary>Kostet das Treffen etwas?</summary><p>Einen kleinen Unkostenbeitrag für Location und Catering sammeln wir vor Ort ein. Der genaue Betrag steht, sobald die Zusagen durch sind.</p></details>
     <details class="faq__item"><summary>Kann ich jemanden mitbringen?</summary><p>Klar — bei der Zusage kannst du +1 oder +2 angeben. Ehemalige aus Nachbarjahrgängen sind ebenfalls herzlich willkommen.</p></details>
-    <details class="faq__item"><summary>Was passiert mit meinen Daten?</summary><p>Wir speichern nur, was du freiwillig einträgst (Stadt, optional Name, Nachricht). Nichts wird weiterverkauft. Auf Wunsch löscht das Orga-Team deinen Eintrag.</p></details>
+    <details class="faq__item"><summary>Wo werden die Einträge gespeichert?</summary><p>In einer offenen Textdatei (<code>data.json</code>) direkt im Projekt auf GitHub — keine externe Datenbank, kein Tracking. Wenn du etwas einträgst, bekommst du deinen Eintrag zum Kopieren oder per E-Mail; das Orga-Team nimmt ihn in die Liste auf. Auf Wunsch wird er jederzeit wieder entfernt.</p></details>
     <details class="faq__item"><summary>Ich schaffe es nicht — schade?</summary><p>Trag dich trotzdem auf der Karte ein! So bleibt der Jahrgang sichtbar, auch wenn nicht alle kommen können.</p></details>
   </div>
 </section>
@@ -301,16 +301,28 @@
   <p class="footer__fine">Karten © OpenStreetMap-Mitwirkende, Kacheln © CARTO · Gestaltet in Register.</p>
 </footer>
 
+<!-- Übergabe-Dialog: so wird ein Eintrag für alle sichtbar -->
+<div class="modal" id="handoff" role="dialog" aria-modal="true" aria-labelledby="handoff-title" hidden>
+  <div class="modal__box">
+    <button class="modal__close" id="handoff-close" aria-label="Dialog schließen">×</button>
+    <p class="eyebrow" id="handoff-eyebrow">Fast geschafft</p>
+    <h3 class="modal__title" id="handoff-title">Dein Eintrag ist gesetzt.</h3>
+    <p class="modal__lead" id="handoff-lead"></p>
+    <pre class="snippet" id="handoff-snippet" tabindex="0"></pre>
+    <div class="modal__actions">
+      <button class="btn btn--solid" id="handoff-copy">Kopieren</button>
+      <a class="btn btn--ghost" id="handoff-mail" href="#">Per E-Mail an die Orga</a>
+    </div>
+    <p class="modal__note">Sichtbar für alle wird der Eintrag, sobald er in <code>data.json</code> aufgenommen und committet ist.</p>
+  </div>
+</div>
+
 <!-- Toast -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <!-- Leaflet -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<!-- Firebase (compat) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-<!-- Config + App -->
-<script src="js/firebase-config.js"></script>
+<!-- App -->
 <script src="js/app.js"></script>
 </body>
 </html>

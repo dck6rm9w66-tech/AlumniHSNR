@@ -2,75 +2,89 @@
 
 Website für das Alumni-Treffen des Jahrgangs 2016, Kommunikationsdesign,
 Hochschule Niederrhein (Krefeld). Alumni tragen ein, wo sie heute leben; aus
-allen Punkten wird live der **geografische Mittelpunkt** berechnet und als
-Passermarke auf einer Weltkarte gezeigt. Keine Anmeldung nötig, Anbindung an
-Google Firebase.
+allen Punkten wird der geografische **Mittelpunkt** berechnet und als
+Passermarke auf einer Weltkarte gezeigt.
+
+Diese Version kommt **ohne Firebase** aus: Alle Einträge liegen als Textdatei
+`data.json` direkt im GitHub-Projekt.
 
 ## Dateien
 
 ```
-index.html            Seitenstruktur
-css/styles.css        Design-System (Druckvorstufe / Riso)
-js/app.js             Karte, Mittelpunkt, Countdown, Gästebuch, Zusagen
-js/firebase-config.js  → hier deine Firebase-Zugangsdaten eintragen
-assets/               Logo, Passermarke (Favicon), Riso-Poster
+index.html      Seitenstruktur
+styles.css      Design-System (liegt neben index.html)
+data.json       Gemeinsame Einträge: pins / guestbook / rsvp
+js/app.js       Karte, Mittelpunkt, Countdown, Übergabe-Dialog
+assets/         Logo, Passermarke (Favicon), Riso-Poster
 ```
 
-## Schnellstart (lokal ansehen)
+## So funktioniert das Speichern
 
-Wegen der Karten- und Firebase-Einbindung nicht per Doppelklick öffnen,
-sondern über einen kleinen Server:
+GitHub Pages liefert nur statische Dateien aus und kann keine Einträge von
+Besuchern entgegennehmen. Deshalb:
+
+1. Die Seite **liest** beim Laden `data.json` — alle sehen dieselben Einträge.
+2. Trägt jemand etwas ein, erscheint es sofort in **seiner** Ansicht und er
+   bekommt einen fertigen JSON-Schnipsel — zum **Kopieren** oder **per E-Mail**
+   an die Orga.
+3. Das Orga-Team fügt neue Einträge in `data.json` ein und committet. Danach
+   sehen **alle** den Eintrag.
+
+Kurz: Die Karte ist kuratiert. Für ein Jahrgangstreffen ist das meist ideal
+(kein Spam), kostet nichts und braucht keinen zusätzlichen Dienst.
+
+### Eintrag aufnehmen
+
+Neue Zeile ans passende Array in `data.json` hängen (auf Kommas achten):
+
+```json
+"pins": [
+  { "name": "Sara", "city": "Wien", "lat": 48.2082, "lng": 16.3738 }
+]
+```
+
+E-Mail-Adresse der Orga ändern: Konstante `ORGA_EMAIL` oben in `js/app.js`
+(und die Adresse im Footer der `index.html`).
+
+## Lokal ansehen
+
+Nicht per Doppelklick öffnen (dann blockiert der Browser `data.json`), sondern
+über einen kleinen Server:
 
 ```bash
 cd alumni-kd-2016
 python3 -m http.server 8000
-# dann im Browser: http://localhost:8000
+# Browser: http://localhost:8000
 ```
 
-Ohne Firebase-Konfiguration läuft alles im **Demo-Modus**: voll bedienbar,
-aber ohne dauerhafte Speicherung. Ein Hinweisband weist darauf hin.
+## Auf GitHub Pages veröffentlichen
 
-## Mit Firebase verbinden (dauerhaft speichern & für alle synchron)
-
-1. Projekt anlegen auf <https://console.firebase.google.com> (kostenlos).
-2. Web-App hinzufügen (`</>`) und das angezeigte `firebaseConfig` kopieren.
-3. Werte in `js/firebase-config.js` eintragen.
-4. Im Menü **Realtime Database** aktivieren (Region z. B. `europe-west1`).
-5. Testregeln (offen — nur zum Ausprobieren):
-   ```json
-   { "rules": { ".read": true, ".write": true } }
-   ```
-   Für den echten Betrieb einschränken, z. B. Schreibrate begrenzen und
-   Feldlängen validieren.
-
-Sobald ein gültiger `apiKey` hinterlegt ist, wechselt die Seite automatisch
-vom Demo- in den Live-Modus. Daten liegen unter den Knoten `pins`,
-`guestbook` und `rsvp`.
-
-## Veröffentlichen
-
-Rein statische Seite — funktioniert auf jedem Webhosting. Besonders einfach:
-
-- **Firebase Hosting:** `firebase init hosting` → `firebase deploy`
-- **Netlify / Vercel / GitHub Pages:** Ordner hochladen bzw. Repo verbinden.
+1. Repo auf github.com anlegen.
+2. Dateien so hochladen, dass `index.html`, `styles.css`, `data.json` sowie die
+   Ordner `js/` und `assets/` **direkt im Wurzelverzeichnis** liegen.
+3. **Settings → Pages → Source:** „Deploy from a branch", Branch `main`,
+   Ordner `/ (root)` → Save. (Liegt alles in einem Unterordner, den Ordner
+   stattdessen `docs` nennen und dort auf `/docs` stellen.)
+4. Nach 1–2 Minuten erscheint die Adresse `https://deinname.github.io/repo/`.
 
 ## Anpassen
 
 - **Datum/Uhrzeit:** `EVENT_DATE` in `js/app.js`.
-- **Ort:** Abschnitt „Ort & Anreise" in `index.html` und die Kartendaten.
-- **Farben/Schriften:** die Tokens ganz oben in `css/styles.css` (`:root`).
-- **Beispiel-Alumni (Demo):** `SEED_PINS` in `js/app.js`.
+- **Orga-E-Mail:** `ORGA_EMAIL` in `js/app.js` + Footer in `index.html`.
+- **Farben/Schriften:** Tokens im `:root`-Block oben in `styles.css`.
+- **Starteinträge:** direkt in `data.json`.
 
 ## Technik
 
-- Karte: [Leaflet](https://leafletjs.com) + CARTO-Kacheln, Geocoding über
-  OpenStreetMap **Nominatim** (bitte deren Nutzungsrichtlinien beachten;
-  für großen Andrang eigenen Geocoder erwägen).
-- Mittelpunkt: sphärischer Schwerpunkt (3D-Vektormittel), damit er auch über
-  den 180°-Meridian hinweg korrekt liegt.
-- Barrierearm: Tastaturfokus sichtbar, `prefers-reduced-motion` respektiert.
+- Karte: Leaflet + CARTO-Kacheln; Geocoding über OpenStreetMap Nominatim.
+- Mittelpunkt: sphärischer Schwerpunkt (3D-Vektormittel), auch über den
+  180°-Meridian korrekt.
+- Barrierearm: sichtbarer Tastaturfokus, Dialog per Esc schließbar,
+  `prefers-reduced-motion` respektiert.
 
-## Hinweis
+## Optionaler Ausbau (self-service ohne Orga-Schritt)
 
-Ort, Datum und Kontaktadresse sind Platzhalter des Orga-Teams und sollten vor
-Veröffentlichung angepasst werden.
+Wer möchte, dass Einträge vollautomatisch landen, kann später GitHub Issues +
+eine GitHub-Action nutzen (Besucher öffnet ein vorbefülltes Issue, die Action
+schreibt es nach `data.json`). Das braucht allerdings ein GitHub-Login der
+Besucher — sag Bescheid, dann liefere ich die Workflow-Datei dazu.
