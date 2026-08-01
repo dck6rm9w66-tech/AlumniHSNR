@@ -82,7 +82,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   backdrop-filter:blur(10px);
   border-bottom:1px solid rgba(22,19,15,.12);
 }
-.nav__logo img{height:34px;width:auto}
+.nav__logo{display:inline-flex}
+.nav__logo svg{height:34px;width:auto;display:block}
 .nav__links{display:flex;align-items:center;gap:clamp(12px,2vw,28px)}
 .nav__links a{
   font-family:var(--f-mono);font-size:.8rem;letter-spacing:.04em;
@@ -219,13 +220,13 @@ button,input,select,textarea{font:inherit;color:inherit}
 
 /* Map holder */
 .map-holder{position:relative;height:520px;border:1px solid rgba(234,231,223,.16);border-radius:4px;overflow:hidden}
-#map{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;background:#0e0c0a}
+#map{position:absolute;top:0;right:0;bottom:0;left:0;width:100%;height:100%;min-height:420px;background:#0e0c0a}
 .map-fail{position:absolute;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;font-family:var(--f-mono);font-size:.85rem;color:rgba(234,231,223,.6)}
 @media(max-width:900px){.map-holder{height:420px}}
 
 /* Leaflet dark tuning + custom markers */
 .leaflet-container{background:#0e0c0a;font-family:var(--f-body)}
-.leaflet-tile{filter:grayscale(1) contrast(.9) brightness(.85)}
+/* Kein CSS-Filter auf .leaflet-tile: verursacht auf iOS/Safari leere Kacheln. */
 .leaflet-control-attribution{background:rgba(22,19,15,.7)!important;color:rgba(234,231,223,.5)!important;font-size:10px}
 .leaflet-control-attribution a{color:rgba(234,231,223,.7)!important}
 .leaflet-bar a{background:var(--ink);color:var(--paper);border-color:rgba(234,231,223,.2)}
@@ -351,8 +352,8 @@ button,input,select,textarea{font:inherit;color:inherit}
   overflow:hidden;border:1.5px solid var(--ink);border-radius:2px;background:var(--paper-2);
   position:relative;padding-bottom:133.33%; /* 3:4 – Safari-sicher statt aspect-ratio */
 }
-.gallery__item img{
-  position:absolute;top:0;left:0;width:100%;height:100%;
+.gallery__item img,.gallery__item svg{
+  position:absolute;top:0;left:0;width:100%;height:100%;display:block;
   object-fit:cover;transition:transform .5s var(--ease);
 }
 .gallery__item:hover img{transform:scale(1.05)}
@@ -376,7 +377,7 @@ button,input,select,textarea{font:inherit;color:inherit}
   padding:clamp(56px,8vw,100px) var(--gutter) 40px;
 }
 .footer__mark{margin-bottom:2rem}
-.footer__mark img{filter:invert(1)}
+.footer__mark svg{width:40px;height:40px;display:block}
 .footer__big{font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,9vw,6rem);line-height:.92;letter-spacing:-.02em}
 .footer__meta{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:var(--maxw);margin:2.6rem 0;font-family:var(--f-mono);font-size:.82rem;line-height:1.7;color:rgba(234,231,223,.7)}
 .footer__meta a{color:var(--pink)}

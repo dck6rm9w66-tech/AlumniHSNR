@@ -8,7 +8,9 @@
   "use strict";
 
   /* ---------- Konfiguration ---------- */
-  var EVENT_DATE = new Date("2026-09-12T18:00:00+02:00");
+  // Monat ist 0-basiert: 3 = April. Numerischer Konstruktor, weil iOS
+  // beim Parsen von Datums-Strings unzuverlässig ist.
+  var EVENT_DATE = new Date(2027, 3, 10, 18, 0, 0);
   var MAP_START = [30, 8];
   var NOMINATIM = "https://nominatim.openstreetmap.org";
   var ORGA_EMAIL = "orga@kd2016.example"; // <- an die echte Orga-Adresse anpassen
@@ -87,8 +89,9 @@
   };
   function pad(n) { return (n < 10 ? "0" : "") + n; }
   function tickCd() {
-    var diff = EVENT_DATE - new Date();
-    if (diff <= 0) { cd.days.textContent = "0"; cd.hours.textContent = "00"; cd.mins.textContent = "00"; cd.secs.textContent = "00"; return; }
+    if (!cd.days || !cd.hours || !cd.mins || !cd.secs) return;
+    var diff = EVENT_DATE.getTime() - Date.now();
+    if (isNaN(diff) || diff <= 0) { cd.days.textContent = "0"; cd.hours.textContent = "00"; cd.mins.textContent = "00"; cd.secs.textContent = "00"; return; }
     var s = Math.floor(diff / 1000);
     cd.days.textContent = Math.floor(s / 86400);
     cd.hours.textContent = pad(Math.floor((s % 86400) / 3600));
@@ -141,6 +144,7 @@
       function remeasure() { if (map) map.invalidateSize(false); }
       setTimeout(remeasure, 200);
       setTimeout(remeasure, 800);
+      setTimeout(remeasure, 1500);
       window.addEventListener("load", remeasure);
       window.addEventListener("resize", remeasure);
       window.addEventListener("orientationchange", function () { setTimeout(remeasure, 300); });
